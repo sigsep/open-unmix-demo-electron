@@ -7,12 +7,12 @@
           <i class="fa fa-keyboard"></i>
         </span>
 
-        <span class="buttons has-addons">
-          <a class="button is-success is-outlined"
+        <span class="buttons">
+          <a class="button is-success"
             v-bind:class="{ 'is-active': isPlaying, 'is-disabled': isLoading }"
             v-on:click='playpause'><span v-bind:class="isPlaying ? 'fa fa-pause' : 'fa fa-play' "></span>
           </a>
-          <a class="button is-danger is-outlined"
+          <a class="button is-danger"
             v-bind:class="{ 'is-disabled': isLoading }"
             v-on:click='stop'><span class="fa fa-stop"></span></a>
         </span>
@@ -228,7 +228,7 @@ export default {
     overflow-x: hidden!important;
     background: transparent; }
   .playlist .channel {
-    background: #7b7b7b; }
+    background: #b4b4b4; }
   .playlist .channel-progress.silent {
     background: white; }
   .playlist .cursor {

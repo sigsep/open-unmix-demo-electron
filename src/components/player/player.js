@@ -10,10 +10,10 @@ var Player = function() {
     container: document.getElementById("playlist"),
     timescale: true,
     mono: true,
-    exclSolo: true,
+    exclSolo: false,
     state: 'cursor',
     colors: {
-      waveOutlineColor: '#282828',
+      waveOutlineColor: '#090909',
       fadeColor: 'black'
     },
     controls: {

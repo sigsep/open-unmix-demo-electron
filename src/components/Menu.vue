@@ -1,13 +1,12 @@
 <template>
-  <div class="navbar-menu" :class="{ 'is-active': isActive }">
-      <div class="navbar-item">
-        <a
-        class="button"
-        v-on:click="toggleCite"
-        >
-          <span>About</span>
-        </a>
-      </div>
+  <span>
+    <a
+    v-on:click="toggleCite"
+    >
+    <span class="icon has-text-info info-icon">
+      <i class="fa fa-info-circle"></i>
+    </span>
+    </a>
    <div class="modal" v-bind:class="{ 'is-active': showCite }">
     <div class="modal-background"></div>
     <div class="modal-card">
@@ -46,11 +45,10 @@
       </section>
     </div>
   </div>
-    </div>
+    </span>
 </template>
 
 <script>
-
 export default {
   props: {
     isActive: Boolean
@@ -79,6 +77,13 @@ export default {
 </style>
 
 <style media="screen">
+
+.info-icon {
+  margin-top: 0.2em;
+  margin-left: 4em;
+  font-size: 2.5em;
+}
+
 .navbar {
     margin-top: 10px;
     z-index: 1000;
@@ -89,7 +94,7 @@ export default {
 }
 
 .modal {
-  z-index: 9998;
+  z-index: 100000;
 }
 
 .modal-card {

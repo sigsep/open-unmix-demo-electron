@@ -1,47 +1,59 @@
 <template>
   <div>
-    <div class="ribbon ribbon-top-right"><span>Release soon!</span></div>
     <section class="hero is-default is-bold">
      <div class="hero-head">
        <div class="container">
          <nav class="navbar" role="navigation" >
-            <div class="navbar-brand">
-               <a class="navbar-item" href="/">
-                <img src="./assets/favicon.png" alt="SISEC"><h1 class="title is-5">open.unmix.app</h1>
-               </a>
-               <a role="button" class="navbar-burger" @click="showNav = !showNav" :class="{ 'is-active': showNav }" aria-label="menu" aria-expanded="false">
-                 <span aria-hidden="true"></span>
-                 <span aria-hidden="true"></span>
-                 <span aria-hidden="true"></span>
-               </a>
-             </div>
-            <main-menu :isActive="showNav"></main-menu>
+              <div class="navbar-brand">
+                <a class="navbar-item" href="/">
+                  <img src="./assets/favicon.png" alt="SISEC"><h1 class="title is-5">open.unmix.app</h1>
+                </a>
+              </div>
+              <div class="navbar-end">
+              <div class="navbar-item">
+                <span class="select">
+                  <select v-model="selectedTrack">
+                    <option v-for="track in tracks" v-bind:value="track.path" v-bind:key="track.name">
+                      {{ track.name }}
+                    </option>
+                  </select>
+                  </span>
+              </div>
+              </div>
          </nav>
        </div>
      </div>
-     <div>
+   </section>
+   <section>
+      <div>
        <div class="container">
-         <unmix></unmix>
+           <section>
+            <div>
+              <div class="column is-narrow">
+                <transition name="slide-fade">
+                  <div v-if="tracklist.length > 0">
+                      <div>
+                        <player :urls="tracklist" :title="selectedTrack"></player>
+                          <div class="keyboard">
+                          <b>Keyboard Shortcuts</b>: Play/Pause: <kbd>Space</kbd> – Solo/Unsolo Sources: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> – Mute/Unmute Sources: <kbd>Ctrl</kbd> + <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd>
+                          <main-menu></main-menu>
+                        </div>
+                    </div>
+                  </div>
+                </transition>
+              </div>
+            </div>
+          </section>
+            
+
        </div>
      </div>
+
    </section>
    <footer class="footer">
    <div class="container">
      <div class="content has-text-centered">
-          <p><i>Open Unmix</i>: an open source music separation baseline for PyTorch, Tensorflow and NNabla.</p>
-       <p>
-         <span class="logo ">
-           <a href="http://www.inria.fr">
-             <img class='inria' src="./assets/logo_INRIA.png" alt="Inria" height="80px" width="80px">
-           </a>
-         </span>
-         <span class="logo">
-           <a href="http://www.sony.com">
-             <img src="./assets/sony.jpeg" alt="Sony" width="80px">
-           </a>
-         </span>
-
-       </p>
+        <p><i>Open Unmix</i>: an open source music separation baseline for PyTorch, Tensorflow and NNabla.</p>
      </div>
    </div>
   </footer>
@@ -49,20 +61,123 @@
 </template>
 
 <script>
+import Player from './components/player/Player.vue'
 import MainMenu from './components/Menu.vue'
-import Unmix from './components/Unmix.vue'
+
+const fs = require('fs')
+const path = require('path')
+const headers_raw = fs.readFileSync(path.join(__static, 'headers.json'), 'utf8')
+let headers = JSON.parse(headers_raw); 
 
 export default {
-  components: { MainMenu, Unmix },
+  components: { MainMenu, Player },
   data: function () {
     return {
-      showNav: false
+      data: [],
+      tracks: [],
+      selectedMethod: 'popular',
+      selectedTrack: '',
+      isLoading: true,
+      loaderColor: 'orange',
+      loaderHeight: '26px'
+
     }
-  }
+  },
+  created: function () {
+    this.isLoading = true
+    this.selectedMethod = "popular"
+    this.selectedTrack = ''
+  },
+  updated: function () {
+    this.isLoading = false
+  },
+  mounted: function () {
+    this.tracks = headers.tracks
+  },
+  computed: {
+    tracklist: function () {
+      var trackstoload = []
+      if (this.selectedTrack === '') {
+        return trackstoload
+      } else {
+        for (let target of headers.targets) {
+          trackstoload.push(
+            { 'name': target,
+              'customClass': target,
+              'solo': false,
+              'mute': false,
+              'file': [
+                this.selectedMethod, this.selectedTrack, this.selectedTrack + '_' + target,
+              ].join('/') + '.wav'
+            }
+          )
+        }
+      return trackstoload
+      }
+    }
+  },
 }
 </script>
 
+<style lang="scss">
+@import "~bulmaswatch/darkly/_variables.scss";
+@import "~bulma";
+@import "~bulmaswatch/darkly/_overrides.scss";
+$widescreen-enabled: false;
+$fullhd-enabled: false;
+</style>
+
 <style>
+
+#player {
+  margin-bottom: 10px;
+}
+
+.keyboard {
+  opacity: 0.5;
+  font-size: 0.8em;
+}
+
+kbd {
+    color: black;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.1em 0.5em;
+    margin: 0 0.2em;
+    box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
+    background-color: #f7f7f7;
+}
+
+#title {
+  margin-top: 20px;
+}
+
+#d3container {
+  margin-top: -1em;
+}
+
+.hide {
+  opacity: 0;
+}
+
+text.method_label.active {
+  fill: orange;
+}
+
+.grid text.track_label.active {
+  fill: red;
+}
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-active {
+  opacity: 0;
+}
 
 .inria {
   padding-bottom: 2em;
@@ -80,12 +195,26 @@ export default {
 footer.footer {
   padding: 0;
   padding-top: 1em;
-  height: 10em;
+  height: 3.5em;
   background-color: #000000!important;
 }
 
+.footer {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  z-index: 1000;
+}
+
+.footer .container .content{
+  font-size: 1.2em;
+}
 .logo {
   margin-right: 2em; 
+}
+
+.hero {
+  height: 5.5em;
 }
 
 .navbar-brand img {
@@ -95,130 +224,4 @@ footer.footer {
   padding-left: 1em;
 }
 
-   @import url(https://fonts.googleapis.com/css?family=Lato:700);
-
-/* common */
-.ribbon {
-  width: 150px;
-  height: 150px;
-  overflow: hidden;
-  position: absolute;
-}
-.ribbon::before,
-.ribbon::after {
-  position: absolute;
-  z-index: 1000;
-  content: '';
-  display: block;
-  border: 5px solid #2980b9;
-}
-.ribbon span {
-  position: absolute;
-  display: block;
-  width: 225px;
-  padding: 15px 0;
-  background-color: #3498db;
-  box-shadow: 0 5px 10px rgba(0,0,0,.1);
-  color: #fff;
-  font: 700 14px/1 'Lato', sans-serif;
-  text-shadow: 0 1px 1px rgba(0,0,0,.2);
-  text-transform: uppercase;
-  text-align: center;
-}
-
-/* top left*/
-.ribbon-top-left {
-  top: -10px;
-  left: -10px;
-}
-.ribbon-top-left::before,
-.ribbon-top-left::after {
-  border-top-color: transparent;
-  border-left-color: transparent;
-}
-.ribbon-top-left::before {
-  top: 0;
-  right: 0;
-}
-.ribbon-top-left::after {
-  bottom: 0;
-  left: 0;
-}
-.ribbon-top-left span {
-  right: -25px;
-  top: 30px;
-  transform: rotate(-45deg);
-}
-
-/* top right*/
-.ribbon-top-right {
-  top: -10px;
-  right: -10px;
-}
-.ribbon-top-right::before,
-.ribbon-top-right::after {
-  border-top-color: transparent;
-  border-right-color: transparent;
-}
-.ribbon-top-right::before {
-  top: 0;
-  left: 0;
-}
-.ribbon-top-right::after {
-  bottom: 0;
-  right: 0;
-}
-.ribbon-top-right span {
-  left: -25px;
-  top: 30px;
-  transform: rotate(45deg);
-}
-
-/* bottom left*/
-.ribbon-bottom-left {
-  bottom: -10px;
-  left: -10px;
-}
-.ribbon-bottom-left::before,
-.ribbon-bottom-left::after {
-  border-bottom-color: transparent;
-  border-left-color: transparent;
-}
-.ribbon-bottom-left::before {
-  bottom: 0;
-  right: 0;
-}
-.ribbon-bottom-left::after {
-  top: 0;
-  left: 0;
-}
-.ribbon-bottom-left span {
-  right: -25px;
-  bottom: 30px;
-  transform: rotate(225deg);
-}
-
-/* bottom right*/
-.ribbon-bottom-right {
-  bottom: -10px;
-  right: -10px;
-}
-.ribbon-bottom-right::before,
-.ribbon-bottom-right::after {
-  border-bottom-color: transparent;
-  border-right-color: transparent;
-}
-.ribbon-bottom-right::before {
-  bottom: 0;
-  left: 0;
-}
-.ribbon-bottom-right::after {
-  top: 0;
-  right: 0;
-}
-.ribbon-bottom-right span {
-  left: -25px;
-  bottom: 30px;
-  transform: rotate(-225deg);
-}
 </style>
