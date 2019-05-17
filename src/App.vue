@@ -17,9 +17,12 @@
                       {{ track.name }}
                     </option>
                   </select>
-                  </span>
+                </span>
               </div>
+              <div class="navbar-item">
+                <main-menu></main-menu>
               </div>
+            </div>
          </nav>
        </div>
      </div>
@@ -30,17 +33,14 @@
            <section>
             <div>
               <div class="column is-narrow">
-                <transition name="slide-fade">
                   <div v-if="tracklist.length > 0">
                       <div>
                         <player :urls="tracklist" :title="selectedTrack"></player>
                           <div class="keyboard">
-                          <b>Keyboard Shortcuts</b>: Play/Pause: <kbd>Space</kbd> – Solo/Unsolo Sources: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> – Mute/Unmute Sources: <kbd>Ctrl</kbd> + <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd>
-                          <main-menu></main-menu>
+                          <b>Keyboard Shortcuts</b>: Play/Pause: <kbd>Space</kbd> – Solo/Unsolo Sources: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> – Mute/Unmute Sources: <kbd>Ctrl</kbd> + <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd>                         
                         </div>
                     </div>
                   </div>
-                </transition>
               </div>
             </div>
           </section>
@@ -120,15 +120,27 @@ export default {
 </script>
 
 <style lang="scss">
+$widescreen-enabled: false;
+$fullhd-enabled: false;
+$navbar-breakpoint: 414px;
+
+@mixin my-touch {
+  @media screen and (max-width: $navbar-breakpoint - 1px) {
+    @content;
+  }
+}
+
+@mixin my-desktop {
+  @media screen and (min-width: $navbar-breakpoint) {
+    @content;
+  }
+}
 @import "~bulmaswatch/darkly/_variables.scss";
 @import "~bulma";
 @import "~bulmaswatch/darkly/_overrides.scss";
-$widescreen-enabled: false;
-$fullhd-enabled: false;
 </style>
 
 <style>
-
 #player {
   margin-bottom: 10px;
 }

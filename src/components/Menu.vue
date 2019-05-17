@@ -4,7 +4,7 @@
     v-on:click="toggleCite"
     >
     <span class="icon has-text-info info-icon">
-      <i class="fa fa-info-circle"></i>
+      <i class="fa fa-question"></i>
     </span>
     </a>
    <div class="modal" v-bind:class="{ 'is-active': showCite }">
@@ -32,8 +32,6 @@
             <li>pretrained baseline model trained on [2]</li>
             <li>design your net, compare with state of the art easily</li>
           </ul>
-
-          <h3>Coming June 1st on <a>open.unmix.app</a>!</h3>
 
           <p>
           [1] Uhlich, Stefan, et al. "Improving music source separation based on deep neural networks through data augmentation and network blending." 2017 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP). IEEE, 2017.

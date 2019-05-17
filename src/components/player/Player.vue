@@ -1,6 +1,5 @@
 <template>
   <div id='player'>
-    <span><scale-loader :loading="isLoading" :color="loaderColor" :size="loaderHeight"></scale-loader></span>
     <div>
       <div class="column is-narrow" ref="playbutton">
         <span class="icon">
@@ -30,16 +29,12 @@ const fs = require('fs')
 const path = require('path')
 const headers_raw = fs.readFileSync(path.join(__static, 'headers.json'), 'utf8')
 let headers = JSON.parse(headers_raw); 
-import fontawesome from 'font-awesome/css/font-awesome.min.css';
 import Mousetrap from 'mousetrap'
 import player from './player.js'
-import ScaleLoader from 'vue-spinner/src/ScaleLoader.vue'
 
 
 export default {
-  components: {
-    ScaleLoader
-  },
+  components: {},
   props: {
     urls: Array,
     title: String,
