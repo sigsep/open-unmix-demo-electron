@@ -1,6 +1,7 @@
 <template>
   <div>
     <section class="hero is-default is-bold">
+      {{ file }}
      <div class="hero-head">
        <div class="container">
          <nav class="navbar" role="navigation" >
@@ -13,6 +14,7 @@
               <div class="navbar-item">
                 <span class="select">
                   <select v-model="selectedTrack">
+                    <option value="" selected> --------------------------- Select Track ----------------------------</option>
                     <option v-for="track in tracks" v-bind:value="track.path" v-bind:key="track.name">
                       {{ track.name }}
                     </option>
@@ -67,6 +69,7 @@ import MainMenu from './components/Menu.vue'
 const fs = require('fs')
 const path = require('path')
 import { remote } from 'electron'
+
 const config_raw = fs.readFileSync(path.join(remote.app.getAppPath(), 'config.json'), 'utf8')
 let config = JSON.parse(config_raw); 
 
@@ -79,6 +82,7 @@ export default {
       selectedTrack: '',
       isLoading: true,
       loaderColor: 'orange',
+      file: path.join(remote.app.getAppPath(), 'config.json'),
       loaderHeight: '26px'
 
     }

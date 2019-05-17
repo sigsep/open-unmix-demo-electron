@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import fontawesome from 'font-awesome/css/font-awesome.min.css';
 const fs = require('fs')
 const path = require('path')
 import { remote } from 'electron'
