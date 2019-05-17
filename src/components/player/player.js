@@ -1,7 +1,11 @@
 import * as WaveformPlaylist from 'waveform-playlist'
 const path = require('path')
 const fs = require('fs')
-const audio_path = path.join(__static, 'AUDIO')
+import { remote } from 'electron'
+const config_raw = fs.readFileSync(path.join(remote.app.getAppPath(), 'config.json'), 'utf8')
+let config = JSON.parse(config_raw); 
+
+const audio_path = path.join(remote.app.getAppPath(), config.root)
 
 var Player = function() {
   this.playlist = WaveformPlaylist.init({

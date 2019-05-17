@@ -27,8 +27,9 @@
 <script>
 const fs = require('fs')
 const path = require('path')
-const headers_raw = fs.readFileSync(path.join(__static, 'headers.json'), 'utf8')
-let headers = JSON.parse(headers_raw); 
+import { remote } from 'electron'
+const config_raw = fs.readFileSync(path.join(remote.app.getAppPath(), 'config.json'), 'utf8')
+let config = JSON.parse(config_raw); 
 import Mousetrap from 'mousetrap'
 import player from './player.js'
 
@@ -44,7 +45,7 @@ export default {
       isPlaying: false,
       isLoading: false,
       player: Object,
-      headers: Array,
+      config: Array,
       loaderColor: 'orange',
       loaderHeight: '26px',
       playbackPosition: 0,
@@ -52,7 +53,7 @@ export default {
     }
   },
   beforeMount: function () {
-    this.headers = headers;
+    this.config = config;
   },
   mounted: function () {
     Mousetrap.bind('space', this.playpause )

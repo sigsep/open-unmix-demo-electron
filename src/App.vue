@@ -66,8 +66,9 @@ import MainMenu from './components/Menu.vue'
 
 const fs = require('fs')
 const path = require('path')
-const headers_raw = fs.readFileSync(path.join(__static, 'headers.json'), 'utf8')
-let headers = JSON.parse(headers_raw); 
+import { remote } from 'electron'
+const config_raw = fs.readFileSync(path.join(remote.app.getAppPath(), 'config.json'), 'utf8')
+let config = JSON.parse(config_raw); 
 
 export default {
   components: { MainMenu, Player },
@@ -75,7 +76,6 @@ export default {
     return {
       data: [],
       tracks: [],
-      selectedMethod: 'popular',
       selectedTrack: '',
       isLoading: true,
       loaderColor: 'orange',
@@ -85,14 +85,13 @@ export default {
   },
   created: function () {
     this.isLoading = true
-    this.selectedMethod = "popular"
     this.selectedTrack = ''
   },
   updated: function () {
     this.isLoading = false
   },
   mounted: function () {
-    this.tracks = headers.tracks
+    this.tracks = config.tracks
   },
   computed: {
     tracklist: function () {
@@ -100,14 +99,14 @@ export default {
       if (this.selectedTrack === '') {
         return trackstoload
       } else {
-        for (let target of headers.targets) {
+        for (let target of config.targets) {
           trackstoload.push(
             { 'name': target,
               'customClass': target,
               'solo': false,
               'mute': false,
               'file': [
-                this.selectedMethod, this.selectedTrack, this.selectedTrack + '_' + target,
+                this.selectedTrack, this.selectedTrack + '_' + target,
               ].join('/') + '.wav'
             }
           )

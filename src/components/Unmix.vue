@@ -38,8 +38,8 @@ import Player from './player/Player.vue'
 
 const fs = require('fs')
 const path = require('path')
-const headers_raw = fs.readFileSync(path.join(__static, 'headers.json'), 'utf8')
-let headers = JSON.parse(headers_raw); 
+const config_raw = fs.readFileSync(path.join(__static, 'config.json'), 'utf8')
+let config = JSON.parse(config_raw); 
 
 export default {
   name: 'unmix',
@@ -66,7 +66,7 @@ export default {
     this.isLoading = false
   },
   mounted: function () {
-    this.tracks = headers.tracks
+    this.tracks = config.tracks
   },
   computed: {
     tracklist: function () {
@@ -74,7 +74,7 @@ export default {
       if (this.selectedTrack === '') {
         return trackstoload
       } else {
-        for (let target of headers.targets) {
+        for (let target of config.targets) {
           trackstoload.push(
             { 'name': target,
               'customClass': target,
