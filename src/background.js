@@ -7,6 +7,8 @@ import {
 } from 'vue-cli-plugin-electron-builder/lib'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
+var path = require('path')
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -18,7 +20,7 @@ function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
     titleBarStyle: 'hidden', width: 800, height: 600, webPreferences: {
-    nodeIntegration: true
+      nodeIntegration: true, icon: path.join(__static, 'icon.png')
   } })
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
