@@ -1,11 +1,5 @@
 import * as WaveformPlaylist from 'waveform-playlist'
-const path = require('path')
 const fs = require('fs')
-import { remote } from 'electron'
-const config_raw = fs.readFileSync(path.join(remote.app.getAppPath(), 'config.json'), 'utf8')
-let config = JSON.parse(config_raw); 
-
-const audio_path = path.join(remote.app.getAppPath(), config.root)
 
 var Player = function() {
   this.playlist = WaveformPlaylist.init({
@@ -33,8 +27,8 @@ Player.prototype.loadTargets = function(trackurls) {
   this.playlist.tracks = []
   var tracksToLoad = []
   for (let track of trackurls) {
-    var buffer = fs.readFileSync(path.join(audio_path, track.file))
-    var blob = new Blob([buffer], { type: 'audio/wav' });
+    var buffer = fs.readFileSync(track.file)
+    var blob = new Blob([buffer]);
     tracksToLoad.push(
       {
         "src": blob,
@@ -49,8 +43,8 @@ Player.prototype.loadTargets = function(trackurls) {
 }
 
 Player.prototype.addTrack = function(track) {
-  var buffer = fs.readFileSync(path.join(audio_path, track.file))
-  var blob = new Blob([buffer], { type: 'audio/wav' });
+  var buffer = fs.readFileSync(track.file)
+  var blob = new Blob([buffer]);
 
   this.playlist.load([
     {

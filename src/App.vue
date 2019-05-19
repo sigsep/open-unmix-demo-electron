@@ -1,28 +1,24 @@
 <template>
   <div>
     <section class="hero is-default is-bold">
-      {{ file }}
      <div class="hero-head">
        <div class="container">
          <nav class="navbar" role="navigation" >
               <div class="navbar-brand">
-                <a class="navbar-item" href="/">
-                  <img src="./assets/favicon.png" alt="SISEC"><h1 class="title is-5">open.unmix.app</h1>
+                <a class="navbar-item" v-on:click="openFile">
+                  <img src="./assets/favicon.png" alt="SISEC"><h1 class="title is-5">{{ title }}</h1>
                 </a>
               </div>
               <div class="navbar-end">
               <div class="navbar-item">
                 <span class="select">
                   <select v-model="selectedTrack">
-                    <option value="" selected> --------------------------- Select Track ----------------------------</option>
+                    <option value="" selected hidden="hidden">Select Track </option>
                     <option v-for="track in tracks" v-bind:value="track.path" v-bind:key="track.name">
                       {{ track.name }}
                     </option>
                   </select>
                 </span>
-              </div>
-              <div class="navbar-item">
-                <main-menu></main-menu>
               </div>
             </div>
          </nav>
@@ -55,7 +51,7 @@
    <footer class="footer">
    <div class="container">
      <div class="content has-text-centered">
-        <p><i>Open Unmix</i>: an open source music separation baseline for PyTorch, Tensorflow and NNabla.</p>
+        <p v-html="tagline"></p>
      </div>
    </div>
   </footer>
@@ -64,54 +60,80 @@
 
 <script>
 import Player from './components/player/Player.vue'
-import MainMenu from './components/Menu.vue'
 
 const fs = require('fs')
 const path = require('path')
-import { remote } from 'electron'
-
-const config_raw = fs.readFileSync(path.join(remote.app.getAppPath(), 'config.json'), 'utf8')
-let config = JSON.parse(config_raw); 
+const { dialog } = require('electron').remote
 
 export default {
-  components: { MainMenu, Player },
+  components: { Player },
   data: function () {
     return {
-      data: [],
-      tracks: [],
+      config: {},
+      title: 'no config loaded',
+      tagline: 'no config loaded!',
       selectedTrack: '',
       isLoading: true,
       loaderColor: 'orange',
-      file: path.join(remote.app.getAppPath(), 'config.json'),
+      file: "",
       loaderHeight: '26px'
-
     }
   },
   created: function () {
     this.isLoading = true
     this.selectedTrack = ''
+    this.openFile()
   },
   updated: function () {
     this.isLoading = false
   },
-  mounted: function () {
-    this.tracks = config.tracks
+  methods: {
+    openFile() {
+      let self = this;
+      dialog.showOpenDialog(
+        { 
+          properties: ['openFile'],
+          filters: [
+            {
+              name: "config",
+              extensions: ["json"]
+            }
+          ]
+        },
+        function(fileNames) {
+          if (fileNames === undefined) return;
+          
+          var fileName = fileNames[0];
+          self.file = fileName
+          const config_raw = fs.readFileSync(fileName, 'utf8')
+          self.config = JSON.parse(config_raw); 
+          self.title = self.config.title
+          self.tagline = self.config.tagline
+        }
+      );
+    }
   },
   computed: {
+    tracks: function () {
+      return this.config.tracks
+    },
     tracklist: function () {
       var trackstoload = []
       if (this.selectedTrack === '') {
         return trackstoload
       } else {
-        for (let target of config.targets) {
+        for (let target of this.config.targets) {
+          const audio_root = path.join(path.dirname(this.file), this.config.audiopath)
+
           trackstoload.push(
             { 'name': target,
               'customClass': target,
               'solo': false,
               'mute': false,
-              'file': [
-                this.selectedTrack, this.selectedTrack + '_' + target,
-              ].join('/') + '.wav'
+              'file': path.join(
+                audio_root, 
+                this.selectedTrack, target + this.config.ext
+              )
             }
           )
         }
@@ -229,7 +251,8 @@ footer.footer {
 }
 
 .hero {
-  height: 5.5em;
+  padding-top: 0.3em;
+  height: 5.0em;
 }
 
 .navbar-brand img {

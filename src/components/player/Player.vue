@@ -25,12 +25,7 @@
 </template>
 
 <script>
-import fontawesome from 'font-awesome/css/font-awesome.min.css';
-const fs = require('fs')
-const path = require('path')
-import { remote } from 'electron'
-const config_raw = fs.readFileSync(path.join(remote.app.getAppPath(), 'config.json'), 'utf8')
-let config = JSON.parse(config_raw); 
+import fontawesome from 'font-awesome/css/font-awesome.min.css'
 import Mousetrap from 'mousetrap'
 import player from './player.js'
 
@@ -46,15 +41,11 @@ export default {
       isPlaying: false,
       isLoading: false,
       player: Object,
-      config: Array,
       loaderColor: 'orange',
       loaderHeight: '26px',
       playbackPosition: 0,
       lastplaybackPosition: 0
     }
-  },
-  beforeMount: function () {
-    this.config = config;
   },
   mounted: function () {
     Mousetrap.bind('space', this.playpause )
