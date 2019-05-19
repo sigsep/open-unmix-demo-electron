@@ -1,4 +1,4 @@
-# open-unmix-demo
+# Open-unmix desktop demo player
 
 Standalone Source Separation Demo Player that loads pre-processed multitrack audio files.
 
