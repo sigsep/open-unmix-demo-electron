@@ -10,9 +10,9 @@ See [releases section](https://github.com/sigsep/open-unmix-demo-electron/releas
 
 ## Usage
 
-```
+Every time you open the demo player it will prompt for a config.json file. Note: to load a different file, just click on the logo in the upper left corner.
 
-## Example config file
+### Provide an example config file
 
 Lets assume we a folder with subfolders for each audio tracks, separated into different sources:
 
