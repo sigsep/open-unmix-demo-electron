@@ -130,9 +130,10 @@ export default {
               'customClass': target,
               'solo': false,
               'mute': false,
+              'type': this.config.mimetype,
               'file': path.join(
                 audio_root, 
-                this.selectedTrack, target + this.config.ext
+                this.selectedTrack, target + this.config.extension
               )
             }
           )

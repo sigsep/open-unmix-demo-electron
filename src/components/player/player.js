@@ -28,7 +28,7 @@ Player.prototype.loadTargets = function(trackurls) {
   var tracksToLoad = []
   for (let track of trackurls) {
     var buffer = fs.readFileSync(track.file)
-    var blob = new Blob([buffer]);
+    var blob = new Blob([buffer], { type: track.type });
     tracksToLoad.push(
       {
         "src": blob,
@@ -44,7 +44,7 @@ Player.prototype.loadTargets = function(trackurls) {
 
 Player.prototype.addTrack = function(track) {
   var buffer = fs.readFileSync(track.file)
-  var blob = new Blob([buffer]);
+  var blob = new Blob([buffer], { type: track.type });
 
   this.playlist.load([
     {
