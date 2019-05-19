@@ -26,7 +26,7 @@ tracks/track_1/other.m4a
 
 Specifying a `config.json` file like following would be sufficient to load the files into the demo player. Note that `audiopath` is a relative path with respect to the path of the config file.
 
-```json
+```js
 {
     "title": "Open-Unmix Demo",
     "audiopath": "tracks",
