@@ -14,8 +14,8 @@
                 <span class="select">
                   <select v-model="selectedTrack">
                     <option value="" selected hidden="hidden">Select Track </option>
-                    <option v-for="track in tracks" v-bind:value="track.path" v-bind:key="track.name">
-                      {{ track.name }}
+                    <option v-for="track in tracks" v-bind:value="track" v-bind:key="track">
+                      {{ track }}
                     </option>
                   </select>
                 </span>
@@ -31,6 +31,9 @@
            <section>
             <div>
               <div class="column is-narrow">
+                <div v-if="tracklist.length == 0" class="content has-text-centered">
+                  <img src="./assets/sigsep.svg" width="60%" style="margin-top: 5em" alt="sigsep">
+                </div>
                   <div v-if="tracklist.length > 0">
                       <div>
                         <player :urls="tracklist" :title="selectedTrack"></player>
@@ -60,6 +63,7 @@
 
 <script>
 import Player from './components/player/Player.vue'
+import { constants } from 'crypto';
 
 const fs = require('fs')
 const path = require('path')
@@ -115,25 +119,42 @@ export default {
   },
   computed: {
     tracks: function () {
-      return this.config.tracks
+      const audio_root = path.join(path.dirname(this.file), this.config.audiopath)
+      if (name === undefined) {
+        return []
+      } else {
+        const getDirectories = source =>
+          fs.readdirSync(source, { withFileTypes: true })
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => dirent.name)
+        
+        return getDirectories(audio_root)
+      }
     },
     tracklist: function () {
       var trackstoload = []
       if (this.selectedTrack === '') {
         return trackstoload
       } else {
-        for (let target of this.config.targets) {
-          const audio_root = path.join(path.dirname(this.file), this.config.audiopath)
-
+        const track_root = path.join(
+          path.dirname(this.file), this.config.audiopath, this.selectedTrack
+        )
+        const getAudios = source =>
+          fs.readdirSync(source)
+            .filter((dirent) => dirent.match(/\.(wav|m4a|mp4|mp3)(?:\?.*|)$/i))
+            .map(dirent => dirent)
+        
+        const audio_files = getAudios(track_root)
+        for (let file of audio_files) {
           trackstoload.push(
-            { 'name': target,
-              'customClass': target,
+            { 'name': path.basename(file, path.extname(file)),
+              'customClass': path.basename(file, path.extname(file)),
               'solo': false,
               'mute': false,
-              'type': this.config.mimetype,
+              'type': "audio/" + path.extname(file),
               'file': path.join(
-                audio_root, 
-                this.selectedTrack, target + this.config.extension
+                track_root, 
+                file
               )
             }
           )

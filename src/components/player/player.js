@@ -22,8 +22,9 @@ var Player = function() {
   });
 }
 
-Player.prototype.loadTargets = function(trackurls) {
+Player.prototype.loadTracks = function(trackurls) {
   this.playlist.getEventEmitter().emit('stop')
+  this.playlist.clear()
   this.playlist.tracks = []
   var tracksToLoad = []
   for (let track of trackurls) {

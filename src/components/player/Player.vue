@@ -70,7 +70,7 @@ export default {
         this.saveState()
         this.stop()
         this.isLoading = true
-        this.player.loadTargets(this.urls)
+        this.player.loadTracks(this.urls)
         for (var i = 0; i < this.urls.length; ++i) {
             (function (i, e) {
                 Mousetrap.bind(String(i + 1), function () {
