@@ -21,6 +21,8 @@ tracks/track_1/vocals.m4a
 tracks/track_1/bass.m4a
 tracks/track_1/drums.m4a
 tracks/track_1/other.m4a
+tracks/track_2/vocals.m4a
+tracks/track_2/other.m4a
 ...
 ```
 
@@ -31,11 +33,6 @@ Specifying a `config.json` file like following would be sufficient to load the f
     "title": "Open-Unmix Demo",
     "audiopath": "tracks",
     "tagline": "my great separation method",
-    "tracks": [
-        { "path": "track_1", "name": "Artist - Title"},
-    ], 
-    "targets": ["bass", "drums", "other", "vocals"],
-    "extension": [".m4a"], "mimetype": "audio/mp4"
 }
 ```
 
@@ -53,3 +50,9 @@ npm run electron:serve
 ### Compiles and minifies for production
 ```
 npm run electron:build
+```
+
+### Build for all platforms 
+```
+npm run electron:build  -- --mac --win --linux --x64
+```
