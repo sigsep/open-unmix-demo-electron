@@ -10,9 +10,9 @@ See [releases section](https://github.com/sigsep/open-unmix-demo-electron/releas
 
 ## Usage
 
-Every time you open the demo player it will prompt for a config.json file. Note: to load a different file, just click on the logo in the upper left corner.
+Every time you open the demo player it will prompt for root folder.
 
-### Provide an example config file
+### Provide audio files
 
 Lets assume we a folder with subfolders for each audio tracks, separated into different sources:
 
@@ -26,15 +26,7 @@ tracks/track_2/other.m4a
 ...
 ```
 
-Specifying a `config.json` file like following would be sufficient to load the files into the demo player. Note that `audiopath` is a relative path with respect to the path of the config file.
-
-```js
-{
-    "title": "Open-Unmix Demo",
-    "audiopath": "tracks",
-    "tagline": "my great separation method",
-}
-```
+just open the folder `tracks` when the application starts.
 
 ## Development
 
