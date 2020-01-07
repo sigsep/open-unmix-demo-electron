@@ -30,7 +30,6 @@
        <div class="container">
            <section>
             <div>
-              <div class="column is-narrow">
                 <div v-if="tracklist.length == 0" class="content has-text-centered">
                   <img src="./assets/sigsep.svg" width="60%" style="margin-top: 5em" alt="sigsep">
                 </div>
@@ -38,15 +37,12 @@
                       <div>
                         <player :urls="tracklist" :title="selectedTrack"></player>
                           <div class="keyboard">
-                          <b>Keyboard Shortcuts</b>: Play/Pause: <kbd>Space</kbd> – Solo/Unsolo Sources: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> – Mute/Unmute Sources: <kbd>Ctrl</kbd> + <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd>                         
+                          <b>Keyboard Shortcuts</b>: Play/Pause: <kbd>Space</kbd> – Solo/Unsolo Sources: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> – Mute/Unmute Sources: <kbd>Ctrl</kbd> + <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd>
                         </div>
                     </div>
                   </div>
-              </div>
             </div>
           </section>
-            
-
        </div>
      </div>
 
@@ -63,7 +59,6 @@
 
 <script>
 import Player from './components/player/Player.vue'
-import { constants } from 'crypto';
 
 const fs = require('fs')
 const path = require('path')
@@ -73,14 +68,15 @@ export default {
   components: { Player },
   data: function () {
     return {
-      config: {},
-      title: 'no config loaded',
-      tagline: 'no config loaded!',
+      title: 'Open-Unmix',
+      tagline: '<i>Open Unmix</i>: an open source music separation baseline for PyTorch',
+      audiopath: '',
       selectedTrack: '',
       isLoading: true,
       loaderColor: 'orange',
       file: "",
-      loaderHeight: '26px'
+      loaderHeight: '26px',
+      tracks: []
     }
   },
   created: function () {
@@ -96,30 +92,19 @@ export default {
       let self = this;
       dialog.showOpenDialog(
         { 
-          properties: ['openFile'],
-          filters: [
-            {
-              name: "config",
-              extensions: ["json"]
-            }
-          ]
+          properties: ['openDirectory'],
         },
         function(fileNames) {
           if (fileNames === undefined) return;
           
           var fileName = fileNames[0];
-          self.file = fileName
-          const config_raw = fs.readFileSync(fileName, 'utf8')
-          self.config = JSON.parse(config_raw); 
-          self.title = self.config.title
-          self.tagline = self.config.tagline
+          self.audiopath = fileName
+          self.updateTracks()
         }
       );
-    }
-  },
-  computed: {
-    tracks: function () {
-      const audio_root = path.join(path.dirname(this.file), this.config.audiopath)
+    },
+    updateTracks() {
+      const audio_root = this.audiopath
       if (name === undefined) {
         return []
       } else {
@@ -128,17 +113,17 @@ export default {
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name)
         
-        return getDirectories(audio_root)
+        this.tracks = getDirectories(audio_root)
       }
-    },
+    }
+  },
+  computed: {
     tracklist: function () {
       var trackstoload = []
       if (this.selectedTrack === '') {
         return trackstoload
       } else {
-        const track_root = path.join(
-          path.dirname(this.file), this.config.audiopath, this.selectedTrack
-        )
+        const track_root = path.join(this.audiopath, this.selectedTrack)
         const getAudios = source =>
           fs.readdirSync(source)
             .filter((dirent) => dirent.match(/\.(wav|m4a|mp4|mp3)(?:\?.*|)$/i))

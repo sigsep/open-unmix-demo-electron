@@ -9,6 +9,7 @@ var Player = function() {
     timescale: true,
     mono: true,
     exclSolo: false,
+    isAutomaticScroll: true,
     state: 'cursor',
     colors: {
       waveOutlineColor: '#090909',

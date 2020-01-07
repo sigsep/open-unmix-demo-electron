@@ -1,7 +1,7 @@
 <template>
   <div id='player'>
     <div>
-      <div class="column is-narrow" ref="playbutton">
+      <div class="column" ref="playbutton">
         <span class="icon">
           <i class="fa fa-keyboard"></i>
         </span>
@@ -210,10 +210,8 @@ export default {
   width: 100%;
 }
   .playlist .playlist-time-scale {
-    overflow: hidden!important;
     height: 30px; }
   .playlist .playlist-tracks {
-    overflow-x: hidden!important;
     background: transparent; }
   .playlist .channel {
     background: #b4b4b4; }
