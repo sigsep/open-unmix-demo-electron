@@ -24,7 +24,7 @@
     "sass-loader": "^7.3.1",
     "vue": "^2.6.10",
     "vue-spinner": "^1.0.3",
-    "waveform-playlist": "^3.0.4"
+    "waveform-playlist": "^3.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.12.1",
